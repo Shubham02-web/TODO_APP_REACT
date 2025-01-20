@@ -16,19 +16,29 @@ function App() {
   };
   const handleCheckBox = (e) => {
     let id = e.target.name;
-    console.log(`id is ${id}`);
     let index = todos.findIndex((item) => {
       return item.id == id;
     });
-    console.log(`index is ${index}`);
     let newTodos = [...todos];
     newTodos[index].isComplited = !newTodos[index].isComplited;
     setTodos(newTodos);
-    console.log(newTodos, todos);
   };
 
   const handleEdit = () => {};
-  const handleDelete = () => {};
+  const handleDelete = (e, id) => {
+    const isConformed = window.confirm(
+      "Are You Sure You Want To Delete These Todo?"
+    );
+    if (isConformed) {
+      let newTodos = todos.filter((item) => {
+        return item.id !== id;
+      });
+      setTodos(newTodos);
+      alert("todo deleted successfully");
+    } else {
+      alert("delete todo cancel");
+    }
+  };
   return (
     <>
       <Navbar />
@@ -74,7 +84,7 @@ function App() {
                     Edit
                   </button>
                   <button
-                    onClick={handleDelete}
+                    onClick={(e) => handleDelete(e, item.id)}
                     className="bg-violet-800 hover:bg-violet-950 p-2 py-1 text-sm font-bold text-white rounded-md mx-1"
                   >
                     Delete
