@@ -1,35 +1,67 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-
+import { useState } from "react";
+import "./App.css";
+import "./index.css";
+import Navbar from "./components/Navbar.jsx";
 function App() {
-  const [count, setCount] = useState(0)
-
+  const [todo, setTodo] = useState("");
+  const [todos, setTodos] = useState([]);
+  const handlechange = (e) => {
+    setTodo(e.target.value);
+  };
+  const handleAdd = () => {
+    setTodos([...todos, { todo, isComplited: true }]);
+    setTodo("");
+  };
+  const handleEdit = () => {};
+  const handleDelete = () => {};
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <Navbar />
+      <div className="container mx-auto my-5 rounded-xl p-5 bg-violet-100 min-h-[80vh]">
+        <div className="addTodo">
+          <h2 className="text-lg font-bold">Add A Todo</h2>
+          <input
+            onChange={handlechange}
+            value={todo}
+            type="text"
+            className="w-1/2"
+          />
+          <button
+            onClick={handleAdd}
+            className="bg-violet-800 hover:bg-violet-950 p-2 py-1 text-sm font-bold text-white rounded-md mx-6"
+          >
+            Add
+          </button>
+        </div>
+        <h2 className="text-lg font-bold">Your Todos</h2>
+        <div className="todos">
+          {todos.map((item) => {
+            return (
+              <div key={todo} className="todo flex w-2/4 my-3 justify-between">
+                <div className={item.isComplited ? "line-through" : ""}>
+                  {item.todo}
+                </div>
+                <div className="buttons">
+                  <button
+                    onClick={handleEdit}
+                    className="bg-violet-800 hover:bg-violet-950 p-2 py-1 text-sm font-bold text-white rounded-md mx-1"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={handleDelete}
+                    className="bg-violet-800 hover:bg-violet-950 p-2 py-1 text-sm font-bold text-white rounded-md mx-1"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
