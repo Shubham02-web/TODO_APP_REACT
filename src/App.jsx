@@ -24,7 +24,18 @@ function App() {
     setTodos(newTodos);
   };
 
-  const handleEdit = () => {};
+  const handleEdit = (e, id) => {
+    let t = todos.filter((i) => {
+      return i.id === id;
+    });
+
+    console.log(t[0].todo);
+    setTodo(t[0].todo);
+    let newTodos = todos.filter((item) => {
+      return item.id !== id;
+    });
+    setTodos(newTodos);
+  };
   const handleDelete = (e, id) => {
     const isConformed = window.confirm(
       "Are You Sure You Want To Delete These Todo?"
@@ -60,25 +71,30 @@ function App() {
         </div>
         <h2 className="text-lg font-bold">Your Todos</h2>
         <div className="todos">
+          {todos.length === 0 && (
+            <h1 className="m-5 p-5 h-1 font-bold ">NO TODOS TO DISPLAY</h1>
+          )}
           {todos.map((item) => {
             return (
               <div
                 key={item.id}
                 className="todo flex w-2/4 my-3 justify-between"
               >
-                <input
-                  onChange={handleCheckBox}
-                  type="checkbox"
-                  value={item.isComplited}
-                  name={item.id}
-                  id=""
-                />
-                <div className={item.isComplited ? "line-through" : ""}>
-                  {item.todo}
+                <div className="flex gap-7">
+                  <input
+                    onChange={handleCheckBox}
+                    type="checkbox"
+                    value={item.isComplited}
+                    name={item.id}
+                    id=""
+                  />
+                  <div className={item.isComplited ? "line-through" : ""}>
+                    {item.todo}
+                  </div>
                 </div>
                 <div className="buttons">
                   <button
-                    onClick={handleEdit}
+                    onClick={(e) => handleEdit(e, item.id)}
                     className="bg-violet-800 hover:bg-violet-950 p-2 py-1 text-sm font-bold text-white rounded-md mx-1"
                   >
                     Edit
