@@ -1,8 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import { useState } from "react";
 import { useEffect } from "react";
-import "./App.css";
-import "./index.css";
 import Navbar from "./components/Navbar.jsx";
 import { FaEdit } from "react-icons/fa";
 import { AiFillDelete } from "react-icons/ai";
@@ -20,32 +18,12 @@ function App() {
     }
   }, []);
 
-  const SaveToLs = (params) => {
-    localStorage.setItem("todos", JSON.stringify(todos));
+  const SaveToLs = (updatedTodos) => {
+    localStorage.setItem("todos", JSON.stringify(updatedTodos));
   };
 
   const toggleFinished = (params) => {
     setShowFinished(!showFinished);
-  };
-
-  const handlechange = (e) => {
-    setTodo(e.target.value);
-  };
-
-  const handleAdd = () => {
-    setTodos([...todos, { id: uuidv4(), todo, isComplited: false }]);
-    setTodo("");
-    SaveToLs();
-  };
-  const handleCheckBox = (e) => {
-    let id = e.target.name;
-    let index = todos.findIndex((item) => {
-      return item.id == id;
-    });
-    let newTodos = [...todos];
-    newTodos[index].isComplited = !newTodos[index].isComplited;
-    setTodos(newTodos);
-    SaveToLs();
   };
 
   const handleEdit = (e, id) => {
@@ -53,14 +31,14 @@ function App() {
       return i.id === id;
     });
 
-    console.log(t[0].todo);
     setTodo(t[0].todo);
     let newTodos = todos.filter((item) => {
       return item.id !== id;
     });
     setTodos(newTodos);
-    SaveToLs();
+    SaveToLs(newTodos);
   };
+
   const handleDelete = (e, id) => {
     const isConformed = window.confirm(
       "Are You Sure You Want To Delete These Todo?"
@@ -70,11 +48,33 @@ function App() {
         return item.id !== id;
       });
       setTodos(newTodos);
-      SaveToLs();
+      SaveToLs(newTodos);
       alert("todo deleted successfully");
     } else {
       alert("delete todo cancel");
     }
+  };
+
+  const handleAdd = () => {
+    const newTodos = [...todos, { id: uuidv4(), todo, isComplited: false }];
+    setTodos(newTodos);
+    SaveToLs(newTodos);
+    setTodo("");
+  };
+
+  const handlechange = (e) => {
+    setTodo(e.target.value);
+  };
+
+  const handleCheckBox = (e) => {
+    let id = e.target.name;
+    let index = todos.findIndex((item) => {
+      return item.id == id;
+    });
+    let newTodos = [...todos];
+    newTodos[index].isComplited = !newTodos[index].isComplited;
+    setTodos(newTodos);
+    SaveToLs(newTodos);
   };
 
   return (
