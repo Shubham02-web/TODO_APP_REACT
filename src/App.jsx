@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from "uuid";
 import { useState } from "react";
 import "./App.css";
 import "./index.css";
@@ -8,10 +9,24 @@ function App() {
   const handlechange = (e) => {
     setTodo(e.target.value);
   };
+
   const handleAdd = () => {
-    setTodos([...todos, { todo, isComplited: true }]);
+    setTodos([...todos, { id: uuidv4(), todo, isComplited: false }]);
     setTodo("");
   };
+  const handleCheckBox = (e) => {
+    let id = e.target.name;
+    console.log(`id is ${id}`);
+    let index = todos.findIndex((item) => {
+      return item.id == id;
+    });
+    console.log(`index is ${index}`);
+    let newTodos = [...todos];
+    newTodos[index].isComplited = !newTodos[index].isComplited;
+    setTodos(newTodos);
+    console.log(newTodos, todos);
+  };
+
   const handleEdit = () => {};
   const handleDelete = () => {};
   return (
@@ -37,7 +52,17 @@ function App() {
         <div className="todos">
           {todos.map((item) => {
             return (
-              <div key={todo} className="todo flex w-2/4 my-3 justify-between">
+              <div
+                key={item.id}
+                className="todo flex w-2/4 my-3 justify-between"
+              >
+                <input
+                  onChange={handleCheckBox}
+                  type="checkbox"
+                  value={item.isComplited}
+                  name={item.id}
+                  id=""
+                />
                 <div className={item.isComplited ? "line-through" : ""}>
                   {item.todo}
                 </div>
