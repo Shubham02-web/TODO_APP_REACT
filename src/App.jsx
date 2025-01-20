@@ -3,9 +3,22 @@ import { useState } from "react";
 import "./App.css";
 import "./index.css";
 import Navbar from "./components/Navbar.jsx";
+import { useEffect } from "react";
 function App() {
   const [todo, setTodo] = useState("");
   const [todos, setTodos] = useState([]);
+
+  useEffect(() => {
+    let todoString = localStorage.getItem("todos");
+    if (todoString) {
+      let todos = JSON.parse(localStorage.getItem("todos"));
+      setTodos(todos);
+    }
+  }, []);
+
+  const SaveToLs = async (params) => {
+    await localStorage.setItem("todos", JSON.stringify(todos));
+  };
   const handlechange = (e) => {
     setTodo(e.target.value);
   };
@@ -13,6 +26,7 @@ function App() {
   const handleAdd = () => {
     setTodos([...todos, { id: uuidv4(), todo, isComplited: false }]);
     setTodo("");
+    SaveToLs();
   };
   const handleCheckBox = (e) => {
     let id = e.target.name;
@@ -22,6 +36,7 @@ function App() {
     let newTodos = [...todos];
     newTodos[index].isComplited = !newTodos[index].isComplited;
     setTodos(newTodos);
+    SaveToLs();
   };
 
   const handleEdit = (e, id) => {
@@ -35,6 +50,7 @@ function App() {
       return item.id !== id;
     });
     setTodos(newTodos);
+    SaveToLs();
   };
   const handleDelete = (e, id) => {
     const isConformed = window.confirm(
@@ -45,11 +61,13 @@ function App() {
         return item.id !== id;
       });
       setTodos(newTodos);
+      SaveToLs();
       alert("todo deleted successfully");
     } else {
       alert("delete todo cancel");
     }
   };
+
   return (
     <>
       <Navbar />
@@ -66,7 +84,7 @@ function App() {
             onClick={handleAdd}
             className="bg-violet-800 hover:bg-violet-950 p-2 py-1 text-sm font-bold text-white rounded-md mx-6"
           >
-            Add
+            Save
           </button>
         </div>
         <h2 className="text-lg font-bold">Your Todos</h2>
@@ -88,11 +106,15 @@ function App() {
                     name={item.id}
                     id=""
                   />
-                  <div className={item.isComplited ? "line-through" : ""}>
+                  <div
+                    className={
+                      item.isComplited ? "line-through flex-wrap" : "flex-wrap"
+                    }
+                  >
                     {item.todo}
                   </div>
                 </div>
-                <div className="buttons">
+                <div className="buttons flex h-full">
                   <button
                     onClick={(e) => handleEdit(e, item.id)}
                     className="bg-violet-800 hover:bg-violet-950 p-2 py-1 text-sm font-bold text-white rounded-md mx-1"
